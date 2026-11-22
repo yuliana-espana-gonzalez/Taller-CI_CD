@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi lista de tareas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <main class="contenedor">
+        <h1>Mi lista de tareas</h1>
+        <p class="descripcion">
+            Organiza tus actividades de manera sencilla.
+        </p>
+
+        <form id="formulario-tarea">
+            <input
+                type="text"
+                id="entrada-tarea"
+                placeholder="Escribe una nueva tarea..."
+                autocomplete="off"
+                required
+            >
+            <button type="submit">Agregar</button>
+        </form>
+
+        <ul id="lista-tareas"></ul>
+
+        <p id="mensaje-vacio">Todavía no tienes tareas.</p>
+
+        <p class="contador">
+            Tareas pendientes: <span id="contador">0</span>
+        </p>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
