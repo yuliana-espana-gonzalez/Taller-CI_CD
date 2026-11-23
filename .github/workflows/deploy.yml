@@ -1,0 +1,74 @@
+
+name: CI-CD
+
+# Ejecutar el proceso cuando se envien cambios a main
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Permisos generales
+permissions:
+  contents: read
+
+# Evitar ejecuciones simultaneas innecesarias
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+
+  # INTEGRACION CONTINUA (CI)
+  ci:
+    name: Integracion continua
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verificar archivos
+        run: |
+          test -f index.html
+          test -f styles.css
+          test -f script.js
+
+      - name: Comprobar sintaxis de JavaScript
+        run: node --check script.js
+
+  # DESPLIEGUE CONTINUO (CD)
+  deploy:
+    name: Despliegue continuo
+    needs: ci
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Preparar archivos para publicacion
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Publicar aplicacion
+        id: deployment
+        uses: actions/deploy-pages@v4
